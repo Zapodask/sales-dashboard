@@ -1,0 +1,19 @@
+[project]
+name = "sales-dashboard-backend"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "joao",email = "joaopedroemerim@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic (>=2.10.6,<3.0.0)",
+    "fastapi (>=0.115.8,<0.116.0)",
+    "uuid (>=1.30,<2.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
