@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from app.domain.entities.product import Product
 
@@ -26,7 +26,7 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    async def delete(self, product_id: str) -> bool:
+    async def delete(self, product_id: str) -> None:
         pass
 
     @abstractmethod
@@ -34,5 +34,5 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_existing_ids(self, product_ids: List[str]) -> List[str]:
+    async def get_prices(self, product_ids: List[str]) -> List[Tuple[str, float]]:
         pass

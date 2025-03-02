@@ -15,25 +15,24 @@ class CreateOrderUseCase:
         self.product_repository = product_repository
 
     async def execute(self, order_input: OrderCreateSchema) -> Order:
-        await self.__check_products_existence(order_input.product_ids)
+        total = await self.__get_total(order_input.product_ids)
 
         order = Order(
             id=str(uuid4()),
             date=order_input.date,
             product_ids=order_input.product_ids,
-            total=order_input.total,
+            total=total,
         )
 
         return await self.order_repository.create(order)
 
-    async def __check_products_existence(self, product_ids: List) -> None:
+    async def __get_total(self, product_ids: List) -> float:
         products_len = len(product_ids)
-        if products_len == 0:
-            return
 
-        existing_products = await self.product_repository.get_existing_ids(product_ids)
+        products_prices = await self.product_repository.get_prices(product_ids)
+        existing_products = [id for id, _ in products_prices]
 
-        if products_len != len(existing_products):
+        if products_len != len(products_prices):
             products_not_found = [
                 product_id
                 for product_id in product_ids
@@ -42,3 +41,5 @@ class CreateOrderUseCase:
             raise NotFoundException(
                 f"Products with ids {products_not_found} does not exist"
             )
+
+        return round(sum([price for _, price in products_prices]), 2)

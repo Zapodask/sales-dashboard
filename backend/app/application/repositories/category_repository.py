@@ -22,7 +22,7 @@ class CategoryRepository(ABC):
         pass
 
     @abstractmethod
-    async def delete(self, category_id: str) -> bool:
+    async def delete(self, category_id: str) -> None:
         pass
 
     @abstractmethod
