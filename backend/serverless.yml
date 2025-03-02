@@ -1,0 +1,14 @@
+service: sales-dashboard
+
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  endpoint: http://localstack:4566
+  runtime: python3.11
+
+functions:
+  processReports:
+    handler: app/infrastructure/serverless/process_reports.process_reports
+    events:
+      - schedule: rate(24 hours)
