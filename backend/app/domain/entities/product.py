@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 from dataclasses import dataclass
 
 
@@ -9,4 +9,4 @@ class Product:
     description: str
     price: float
     category_ids: List[str]
-    image_url: Optional[str] = None
+    image_url: str
