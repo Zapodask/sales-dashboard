@@ -1,0 +1,73 @@
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8000:8000
+    networks:
+      - app
+    environment:
+      - MONGO_URI=mongodb://dbuser:dbpassword@db:27017/
+      - MONGO_DB=db
+      - AWS_ACCESS_KEY_ID=SJDHF0984HKJHH23O
+      - AWS_SECRET_ACCESS_KEY=DSAJFKHAKLJEHLRH32HRO3I2HROO23IH
+      - AWS_REGION=us-east-1
+      - AWS_LOCAL_ENDPOINT=http://localstack:4566
+      - PRODUCT_IMAGES_BUCKET_NAME=product-images
+    depends_on:
+      - db
+      - localstack
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  db:
+    image: mongo
+    container_name: db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - db_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dbuser
+      MONGO_INITDB_ROOT_PASSWORD: dbpassword
+      MONGO_INITDB_DATABASE: db
+    networks:
+      - app
+
+  localstack:
+    image: localstack/localstack
+    container_name: localstack
+    restart: always
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - AWS_ACCESS_KEY_ID=SJDHF0984HKJHH23O
+      - AWS_SECRET_ACCESS_KEY=DSAJFKHAKLJEHLRH32HRO3I2HROO23IH
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "localstack_data:/var/lib/localstack"
+      - "./scripts/localstack:/etc/localstack/init/ready.d"
+    networks:
+      - app
+
+networks:
+  app:
+
+volumes:
+  db_data:
+  localstack_data:
